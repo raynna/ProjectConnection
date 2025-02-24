@@ -1,3 +1,4 @@
+package packets
 
 abstract class Packet {
     abstract val packet: Packets

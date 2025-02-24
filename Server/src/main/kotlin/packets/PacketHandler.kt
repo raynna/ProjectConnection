@@ -14,7 +14,7 @@ class PacketHandler(
     )
 
     fun processRequest(request: String) {
-        val parts = request.trim().split(" ").filter { it.isNotEmpty() }
+        val parts = request.split(" ")
         if (parts.isEmpty()) {
             sendResponse("PACKET_ARGUMENTS_EMPTY")
             return

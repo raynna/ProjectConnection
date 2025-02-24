@@ -1,13 +1,10 @@
+package ui
+
 import javax.swing.*
 import java.awt.*
 
 class LoginScreen {
 
-    /**@author Raynna
-     * @date 23/02-2025
-     * Creating the Loginscreen, which is send on launch of client
-     * All the fields are sent through packets later to server as requests
-     */
     private lateinit var frame: JFrame
     private lateinit var usernameField: JTextField
     private lateinit var passwordField: JPasswordField
@@ -16,11 +13,11 @@ class LoginScreen {
     private lateinit var errorLabel: JLabel
     private lateinit var messageLabel: JLabel
 
+    private var onLoginListener: ((String, String) -> Unit)? = null
+
     init {
         createLoginScreen()
     }
-
-    private var onLoginListener: ((String, String) -> Unit)? = null
 
     fun setOnLoginListener(listener: (String, String) -> Unit) {
         onLoginListener = listener
@@ -42,7 +39,27 @@ class LoginScreen {
         }
 
         createAccountButton = JButton("Create Account").apply {
-            addActionListener { showCreateAccountPopup() }
+            addActionListener {
+                frame.isVisible = false
+                val createAccountScreen = CreateAccountScreen()
+                createAccountScreen.setOnCreateAccountListener { username, password, email ->
+                    val result = GameClient.createAccount(username, password, email)
+                    if (result.first) {
+                        createAccountScreen.close()
+
+                        SwingUtilities.invokeLater {
+                            frame.isVisible = true
+                            showMessage("Account created successfully!")
+                        }
+                    } else {
+                        createAccountScreen.showError(result.second)
+                    }
+                }
+                createAccountScreen.setOnBackListener {
+                    frame.isVisible = true
+                }
+                createAccountScreen.show()
+            }
         }
 
         errorLabel = JLabel().apply {
@@ -78,12 +95,6 @@ class LoginScreen {
         onLoginListener?.invoke(username, password)
     }
 
-
-    private fun showCreateAccountPopup() {
-        val createAccountDialog = CreateAccountScreen(frame)
-        createAccountDialog.isVisible = true
-    }
-
     fun show() {
         frame.isVisible = true
     }
@@ -93,7 +104,7 @@ class LoginScreen {
         errorLabel.isVisible = true
     }
 
-    fun showMessage(message: String) {
+    private fun showMessage(message: String) {
         messageLabel.text = message
         messageLabel.isVisible = true
         errorLabel.isVisible = false

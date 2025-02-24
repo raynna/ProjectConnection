@@ -1,3 +1,5 @@
+package packets
+
 class LoginPacket(
     private val username: String,
     private val password: String
@@ -9,7 +11,8 @@ class LoginPacket(
         "WRONG_PASSWORD" to "Incorrect password",
         "ACCOUNT_BANNED" to "Your account is banned",
         "USERNAME_REQUIRED" to "You need to enter a username",
-        "PASSWORD_REQUIRED" to "You need to enter a password"
+        "PASSWORD_REQUIRED" to "You need to enter a password",
+        "BOTH_REQUIRED" to "You need to enter both username & password"
     )
     override val data: List<String> = listOf(username, password)
 }

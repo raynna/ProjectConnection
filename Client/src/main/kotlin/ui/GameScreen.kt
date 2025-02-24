@@ -1,3 +1,5 @@
+package ui
+
 import javax.swing.*
 import java.awt.*
 
@@ -15,13 +17,12 @@ class GameScreen {
         frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         frame.layout = BorderLayout()
 
-        // Game screen components (this could be more complex, like a game board, etc.)
         val label = JLabel("Welcome to the Game!", JLabel.CENTER)
         label.font = Font("Arial", Font.BOLD, 24)
 
         frame.add(label, BorderLayout.CENTER)
         frame.pack()
-        frame.setLocationRelativeTo(null) // Center the window
+        frame.setLocationRelativeTo(null)
         frame.isVisible = true
     }
 }

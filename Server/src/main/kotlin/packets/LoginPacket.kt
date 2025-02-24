@@ -10,12 +10,21 @@ class LoginPacket : Packet() {
 
     override fun processRequest(parts: List<String>, dependencies: Map<String, Any>): String {
         println("[LoginPacket] size = $size, expected 3?")
-        val username = parts.getOrNull(1) ?: ""
-        val password = parts.getOrNull(2) ?: ""
-        if (username.isEmpty()) {
+
+        val username = parts[1]
+        val password = parts[2]
+
+        println("IsUsernameEmpty?: ${username.isEmpty()}")
+        println("IsPasswordEmpty?: ${password.isEmpty()}")
+
+        if (username.isEmpty() && password.isEmpty()) {
+            return "BOTH_REQUIRED"
+        }
+        if (username.isEmpty() || username == "") {
+
             return "USERNAME_REQUIRED"
         }
-        if (password.isEmpty()) {
+        if (password.isEmpty() || password == "") {
             return "PASSWORD_REQUIRED"
         }
         if (parts.size < size) {

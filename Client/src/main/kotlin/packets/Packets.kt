@@ -1,3 +1,5 @@
+package packets
+
 enum class Packets(val id: Int, val successMessage: String?, val errorMessages: Map<String, String>) {
     LOGIN_PACKET(
         id = 1,
