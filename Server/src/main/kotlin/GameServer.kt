@@ -1,4 +1,5 @@
 import game.AccountManager
+import packets.PacketHandler
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.InputStreamReader
@@ -8,14 +9,9 @@ import java.net.Socket
 
 object GameServer {
 
-    /**@author Raynna
-     * @date 23/02-2025
-     * Open the server connection and handle incomming packets from client
-     */
-
     private val accountManager = AccountManager()
 
-    const val PORT = 8080
+    private const val PORT = 8080
 
     private fun start() {
         val serverSocket = ServerSocket(PORT).apply { reuseAddress = true }
@@ -24,26 +20,34 @@ object GameServer {
         while (true) {
             val clientSocket = serverSocket.accept()
             println("[SERVER] Client connected: ${clientSocket.inetAddress}")
-            handleClient(clientSocket)
+            Thread { processPackets(clientSocket) }.start()
         }
     }
 
-    private fun handleClient(clientSocket: Socket) {
+    private fun processPackets(clientSocket: Socket) {
         try {
             val input = BufferedReader(InputStreamReader(clientSocket.getInputStream()))
             val output = BufferedWriter(OutputStreamWriter(clientSocket.getOutputStream()))
 
-            val request = input.readLine()
-            println("[SERVER] Received request: $request")
+            val dependencies = mapOf(
+                "accountManager" to accountManager
+            )
 
-            val loginEncoder = LoginEncoder(accountManager, input, output)
-            loginEncoder.processRequest(request)
+            val packetHandler = PacketHandler(input, output, dependencies)
 
-            output.flush()
+            while (true) {
+                val request = input.readLine() ?: break
+                println("[SERVER] Received request: $request")
+
+                packetHandler.processRequest(request)
+                output.flush()
+            }
         } catch (e: Exception) {
+            println("[SERVER] Error processing client request: ${e.message}")
             e.printStackTrace()
         } finally {
             clientSocket.close()
+            println("[SERVER] Client disconnected: ${clientSocket.inetAddress}")
         }
     }
 

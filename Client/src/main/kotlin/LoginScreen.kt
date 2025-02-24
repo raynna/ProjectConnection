@@ -14,6 +14,7 @@ class LoginScreen {
     private lateinit var loginButton: JButton
     private lateinit var createAccountButton: JButton
     private lateinit var errorLabel: JLabel
+    private lateinit var messageLabel: JLabel
 
     init {
         createLoginScreen()
@@ -46,6 +47,11 @@ class LoginScreen {
 
         errorLabel = JLabel().apply {
             foreground = Color.RED
+            isVisible = false
+        }
+
+        messageLabel = JLabel().apply {
+            foreground = Color.GREEN
             isVisible = false
         }
 
@@ -85,6 +91,12 @@ class LoginScreen {
     fun showError(message: String) {
         errorLabel.text = message
         errorLabel.isVisible = true
+    }
+
+    fun showMessage(message: String) {
+        messageLabel.text = message
+        messageLabel.isVisible = true
+        errorLabel.isVisible = false
     }
 
     fun close() {

@@ -1,55 +1,51 @@
 import javax.swing.*
 import java.awt.*
-import java.io.IOException
 
-class CreateAccountScreen(parent: JFrame) : JDialog(parent, "Create Account", true) {
+class CreateAccountScreen(owner: JFrame) : JDialog(owner, "Create Account", true) {
 
-    /**@author Raynna
-     * @date 23/02-2025
-     * Create the CreateAccount screen
-     * This handles creating account and sending packet requests to server to make sure its a valid account to create.
-     */
-
-    private val usernameField = JTextField(20)
-    private val passwordField = JPasswordField(20)
-    private val emailField = JTextField(20)
-    private val createButton = JButton("Create Account")
-    private val cancelButton = JButton("Cancel")
+    private lateinit var usernameField: JTextField
+    private lateinit var passwordField: JPasswordField
+    private lateinit var emailField: JTextField
+    private lateinit var createButton: JButton
+    private lateinit var errorLabel: JLabel
 
     init {
-        layout = GridLayout(5, 2)
-        setSize(300, 200)
-        setLocationRelativeTo(parent)
-
-        add(JLabel("Username:"))
-        add(usernameField)
-        add(JLabel("Password:"))
-        add(passwordField)
-        add(JLabel("Email:"))
-        add(emailField)
-        add(createButton)
-        add(cancelButton)
-
-        createButton.addActionListener { onCreateAccount() }
-        cancelButton.addActionListener { dispose() }
+        createUI()
     }
 
-    private fun onCreateAccount() {
-        val username = usernameField.text
-        val password = String(passwordField.password)
-        val email = emailField.text
+    private fun createUI() {
+        layout = BorderLayout()
 
-        try {
-            val response = GameClient.createAccount(username, password, email)
+        val usernameLabel = JLabel("Username:")
+        usernameField = JTextField(20)
 
-            if (response.first) {
-                JOptionPane.showMessageDialog(this, "Account created successfully!")
-                dispose()
-            } else {
-                JOptionPane.showMessageDialog(this, response.second, "Error", JOptionPane.ERROR_MESSAGE)
-            }
-        } catch (e: IOException) {
-            JOptionPane.showMessageDialog(this, "Error connecting to the server", "Error", JOptionPane.ERROR_MESSAGE)
+        val passwordLabel = JLabel("Password:")
+        passwordField = JPasswordField(20)
+
+        val emailLabel = JLabel("Email:")
+        emailField = JTextField(20)
+
+        createButton = JButton("Create Account")
+
+        errorLabel = JLabel().apply {
+            foreground = Color.RED
+            isVisible = false
         }
+
+        val panel = JPanel().apply {
+            layout = GridLayout(4, 2)
+            add(usernameLabel)
+            add(usernameField)
+            add(passwordLabel)
+            add(passwordField)
+            add(emailLabel)
+            add(emailField)
+            add(createButton)
+            add(errorLabel)
+        }
+
+        add(panel, BorderLayout.CENTER)
+        pack()
+        setLocationRelativeTo(owner)
     }
 }
