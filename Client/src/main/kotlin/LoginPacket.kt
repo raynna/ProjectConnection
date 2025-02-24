@@ -11,5 +11,5 @@ class LoginPacket(
         "USERNAME_REQUIRED" to "You need to enter a username",
         "PASSWORD_REQUIRED" to "You need to enter a password"
     )
-    override val data: List<String> = listOf(username, password) // Initialize data
+    override val data: List<String> = listOf(username, password)
 }

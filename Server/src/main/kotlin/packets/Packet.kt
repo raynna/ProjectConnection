@@ -20,7 +20,7 @@ abstract class Packet {
             return false
         }
 
-        return true // Allow further processing
+        return true
     }
 
 

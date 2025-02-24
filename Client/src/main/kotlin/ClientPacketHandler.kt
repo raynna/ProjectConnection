@@ -1,8 +1,3 @@
-package client
-
-import CreateAccountPacket
-import LoginPacket
-import Packet
 import java.io.BufferedReader
 import java.io.BufferedWriter
 
@@ -23,12 +18,12 @@ class ClientPacketHandler(
 
     fun sendLoginRequest(username: String, password: String): Pair<Boolean, String> {
         println("[sendLoginRequest] username: $username password: $password")
-        val packet = LoginPacket(username, password) // Pass username and password
+        val packet = LoginPacket(username, password)
         return sendPacket(packet)
     }
 
     fun sendCreateAccountRequest(username: String, password: String, email: String): Pair<Boolean, String> {
-        val packet = CreateAccountPacket(username, password, email) // Pass username, password, and email
+        val packet = CreateAccountPacket(username, password, email)
         return sendPacket(packet)
     }
 }

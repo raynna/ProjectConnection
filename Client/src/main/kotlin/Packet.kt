@@ -3,7 +3,7 @@ abstract class Packet {
     abstract val packet: Packets
     abstract val successMessage: String?
     abstract val errorMessages: Map<String, String>
-    abstract val data: List<String> // Add this property
+    abstract val data: List<String>
 
     private fun getErrorMessage(code: String): String {
         return errorMessages[code] ?: "Unknown error"
